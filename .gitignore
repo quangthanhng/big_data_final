@@ -1,0 +1,21 @@
+# # Ignore large data files
+data/raw/
+data/sample/
+data/processed/
+
+# Docker
+docker/.env
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+

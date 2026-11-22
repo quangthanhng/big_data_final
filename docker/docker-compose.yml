@@ -1,33 +1,28 @@
-version: '3.8'
-
 services:
   spark-master:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0-python3
     container_name: spark-master
     hostname: spark-master
-    environment:
-      - SPARK_MODE=master
-      - SPARK_MASTER_HOST=spark-master
-      - SPARK_MASTER_PORT=7077
-      - SPARK_MASTER_WEBUI_PORT=8080
     ports:
-      - "8080:8080"   # Spark Master Web UI
-      - "7077:7077"   # Spark Master port
+      - "8080:8080"
+      - "7077:7077"
     volumes:
-      - ../data:/opt/bitnami/spark/data
-      - ../src:/opt/bitnami/spark/src
+      - ../data:/opt/spark/data
+      - ../data:/home/jovyan/data
+      - ../src:/opt/spark/src
+      - ../src:/home/jovyan/src
+    command: >
+      bash -c "
+        /opt/spark/sbin/start-master.sh --host spark-master --port 7077 --webui-port 8080 &&
+        tail -f /opt/spark/logs/*.out
+      "
     networks:
       - spark-network
 
   spark-worker-1:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0-python3
     container_name: spark-worker-1
     hostname: spark-worker-1
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=3g
     deploy:
       resources:
         limits:
@@ -36,20 +31,23 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ../data:/opt/bitnami/spark/data
-      - ../src:/opt/bitnami/spark/src
+      - ../data:/opt/spark/data
+      - ../data:/home/jovyan/data
+      - ../src:/opt/spark/src
+      - ../src:/home/jovyan/src
+    command: >
+      bash -c "
+        sleep 4 &&
+        /opt/spark/sbin/start-worker.sh spark://spark-master:7077 --cores 2 --memory 3g --webui-port 8081 &&
+        tail -f /opt/spark/logs/*.out
+      "
     networks:
       - spark-network
 
   spark-worker-2:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0-python3
     container_name: spark-worker-2
     hostname: spark-worker-2
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=3g
     deploy:
       resources:
         limits:
@@ -58,20 +56,23 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ../data:/opt/bitnami/spark/data
-      - ../src:/opt/bitnami/spark/src
+      - ../data:/opt/spark/data
+      - ../data:/home/jovyan/data
+      - ../src:/opt/spark/src
+      - ../src:/home/jovyan/src
+    command: >
+      bash -c "
+        sleep 4 &&
+        /opt/spark/sbin/start-worker.sh spark://spark-master:7077 --cores 2 --memory 3g --webui-port 8081 &&
+        tail -f /opt/spark/logs/*.out
+      "
     networks:
       - spark-network
 
   spark-worker-3:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0-python3
     container_name: spark-worker-3
     hostname: spark-worker-3
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=3g
     deploy:
       resources:
         limits:
@@ -80,8 +81,16 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ../data:/opt/bitnami/spark/data
-      - ../src:/opt/bitnami/spark/src
+      - ../data:/opt/spark/data
+      - ../data:/home/jovyan/data
+      - ../src:/opt/spark/src
+      - ../src:/home/jovyan/src
+    command: >
+      bash -c "
+        sleep 4 &&
+        /opt/spark/sbin/start-worker.sh spark://spark-master:7077 --cores 2 --memory 3g --webui-port 8081 &&
+        tail -f /opt/spark/logs/*.out
+      "
     networks:
       - spark-network
 
@@ -91,15 +100,15 @@ services:
     hostname: jupyter-pyspark
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - PYSPARK_DRIVER_PYTHON=jupyter
-      - PYSPARK_DRIVER_PYTHON_OPTS="lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"
       - SPARK_MASTER=spark://spark-master:7077
     ports:
-      - "8888:8888"   # JupyterLab
-      - "4040:4040"   # Spark Driver UI (khi có job đang chạy)
+      - "8888:8888"
+      - "4040:4040"
     volumes:
       - ../data:/home/jovyan/data
+      - ../data:/opt/spark/data
       - ../src:/home/jovyan/src
+      - ../src:/opt/spark/src
     depends_on:
       - spark-master
     networks:
