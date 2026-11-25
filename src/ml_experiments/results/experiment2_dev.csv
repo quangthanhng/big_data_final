@@ -1,0 +1,5 @@
+model,nwrmsle,rmsle,rmse,mae,train_time_s,predict_time_s,n_test
+Baseline (rolling_mean_7),0.6586,0.65863,18.31134,4.78865,0.0,,2930
+LinearRegression,0.57224,0.57188,18.02787,4.57837,11.02,0.68,2930
+RandomForest,0.54546,0.54508,17.93051,4.36748,19.49,3.74,2930
+GBT,0.55281,0.55274,18.17189,4.51973,31.5,1.24,2930
