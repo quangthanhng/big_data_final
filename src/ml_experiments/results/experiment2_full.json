@@ -1,0 +1,202 @@
+{
+  "experiment": "2 - model accuracy vs. training cost",
+  "run_at": "2026-11-25T09:57:19",
+  "features_path": "/home/jovyan/data/processed/favorita_features.parquet",
+  "train_rows": 9354342,
+  "test_rows": 299150,
+  "split": {
+    "train_end": "2017-07-31",
+    "test": [
+      "2017-08-01",
+      "2017-08-15"
+    ]
+  },
+  "params": {
+    "lr_reg": 0.01,
+    "lr_iter": 50,
+    "rf_trees": 30,
+    "rf_depth": 10,
+    "gbt_iter": 30,
+    "gbt_depth": 6,
+    "gbt_step": 0.1,
+    "subsample": 0.7
+  },
+  "cluster": {
+    "master": "spark://spark-master:7077",
+    "executors": 2,
+    "executor_cores": "2",
+    "executor_memory": "1200m",
+    "default_parallelism": 4,
+    "shuffle_partitions": "16"
+  },
+  "timings": {
+    "load_and_cache": 74.04
+  },
+  "results": [
+    {
+      "model": "Baseline (rolling_mean_7)",
+      "nwrmsle": 0.6301,
+      "rmsle": 0.63145,
+      "rmse": 17.82179,
+      "mae": 4.46806,
+      "n_test": 299150,
+      "train_time_s": 0.0,
+      "predict_time_s": null
+    },
+    {
+      "model": "LinearRegression",
+      "nwrmsle": 0.54806,
+      "rmsle": 0.54843,
+      "rmse": 19.23312,
+      "mae": 4.41221,
+      "n_test": 299150,
+      "train_time_s": 176.39,
+      "predict_time_s": 8.07,
+      "lr_coefficients_count": 82
+    },
+    {
+      "model": "RandomForest",
+      "nwrmsle": 0.52294,
+      "rmsle": 0.52366,
+      "rmse": 19.11534,
+      "mae": 4.21063,
+      "n_test": 299150,
+      "train_time_s": 1295.33,
+      "predict_time_s": 13.49,
+      "feature_importances": [
+        {
+          "feature": "rolling_mean_7",
+          "importance": 0.45366
+        },
+        {
+          "feature": "rolling_mean_28",
+          "importance": 0.24251
+        },
+        {
+          "feature": "lag_7",
+          "importance": 0.14265
+        },
+        {
+          "feature": "lag_14",
+          "importance": 0.08883
+        },
+        {
+          "feature": "lag_28",
+          "importance": 0.04556
+        },
+        {
+          "feature": "is_weekend",
+          "importance": 0.00949
+        },
+        {
+          "feature": "city_idx",
+          "importance": 0.0053
+        },
+        {
+          "feature": "family_idx",
+          "importance": 0.00362
+        },
+        {
+          "feature": "onpromotion",
+          "importance": 0.00238
+        },
+        {
+          "feature": "day_of_week",
+          "importance": 0.00184
+        },
+        {
+          "feature": "day_of_month",
+          "importance": 0.00174
+        },
+        {
+          "feature": "store_nbr_cat_idx",
+          "importance": 0.00101
+        },
+        {
+          "feature": "month",
+          "importance": 0.00037
+        },
+        {
+          "feature": "perishable",
+          "importance": 0.00029
+        },
+        {
+          "feature": "oil_price",
+          "importance": 0.00022
+        }
+      ]
+    },
+    {
+      "model": "GBT",
+      "nwrmsle": 0.5206,
+      "rmsle": 0.52134,
+      "rmse": 19.03043,
+      "mae": 4.21885,
+      "n_test": 299150,
+      "train_time_s": 11211.4,
+      "predict_time_s": 36.72,
+      "feature_importances": [
+        {
+          "feature": "rolling_mean_7",
+          "importance": 0.60004
+        },
+        {
+          "feature": "rolling_mean_28",
+          "importance": 0.12333
+        },
+        {
+          "feature": "day_of_month",
+          "importance": 0.03841
+        },
+        {
+          "feature": "lag_28",
+          "importance": 0.03557
+        },
+        {
+          "feature": "lag_14",
+          "importance": 0.03286
+        },
+        {
+          "feature": "family_idx",
+          "importance": 0.02815
+        },
+        {
+          "feature": "lag_7",
+          "importance": 0.02597
+        },
+        {
+          "feature": "onpromotion",
+          "importance": 0.02247
+        },
+        {
+          "feature": "store_nbr_cat_idx",
+          "importance": 0.01999
+        },
+        {
+          "feature": "day_of_week",
+          "importance": 0.01771
+        },
+        {
+          "feature": "is_weekend",
+          "importance": 0.01557
+        },
+        {
+          "feature": "month",
+          "importance": 0.01098
+        },
+        {
+          "feature": "city_idx",
+          "importance": 0.00988
+        },
+        {
+          "feature": "holiday_type_idx",
+          "importance": 0.00862
+        },
+        {
+          "feature": "oil_price",
+          "importance": 0.00679
+        }
+      ]
+    }
+  ]
+}
